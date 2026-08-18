@@ -22,14 +22,14 @@ A Python-based Windows wallpaper slideshow that randomly displays wallpapers whi
 ├── requirements.txt
 ├── README.md
 └── .gitignore
-
+```
 ## Technologies
-
+```
 - Python
 - comtypes
 - Windows IDesktopWallpaper API
 - Object-Oriented Programming
-
+```
 ## How It Works
 
 ```text
@@ -44,26 +44,28 @@ Show Each Image Once
 New Random Order
        ↓
 Repeat
-
+```
 ## Requirements
 
 - Python 3
 - Windows 11
 - comtypes
-
+```
 ## Run
 
 ```bash
 pip install -r requirements.txt
 python main.py
-
+```
 ##Future Improvements
+```
 -Wallpaper scaling and orientation options
 -GUI settings
 -System tray support
 -Start with Windows
 -Pause/resume controls
 -Multiple wallpaper folders
-
+```
 ##Author
+```
 Yash Thakur
