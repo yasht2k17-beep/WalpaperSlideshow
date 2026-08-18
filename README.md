@@ -13,8 +13,7 @@ A Python-based Windows wallpaper slideshow that randomly displays wallpapers whi
 - Windows 11 desktop wallpaper integration
 
 ## Project Structure
-
-```text
+```
 .
 ├── main.py
 ├── slideshow.py
@@ -24,15 +23,14 @@ A Python-based Windows wallpaper slideshow that randomly displays wallpapers whi
 └── .gitignore
 ```
 ## Technologies
-```
+
 - Python
 - comtypes
 - Windows IDesktopWallpaper API
 - Object-Oriented Programming
-```
-## How It Works
 
-```text
+## How It Works
+```
 Wallpaper Folder
        ↓
 Find Images
@@ -50,22 +48,23 @@ Repeat
 - Python 3
 - Windows 11
 - comtypes
-```
-## Run
 
+## Run
 ```bash
 pip install -r requirements.txt
 python main.py
 ```
-##Future Improvements
-```
--Wallpaper scaling and orientation options
--GUI settings
--System tray support
--Start with Windows
--Pause/resume controls
--Multiple wallpaper folders
-```
-##Author
-```
+Enter the wallpaper folder and slideshow interval when prompted.
+
+## Future Improvements
+
+- Wallpaper scaling and orientation options
+- GUI settings
+- System tray support
+- Start with Windows
+- Pause/resume controls
+- Multiple wallpaper folders
+
+## Author
+
 Yash Thakur
