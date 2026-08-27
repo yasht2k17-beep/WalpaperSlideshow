@@ -10,11 +10,17 @@ except ValueError:
     print("Invalid interval")
     exit()
 
+position=input("Enter position (center/tile/stretch/fit/fill): ").lower()
+
 try:
     slideshow=Slideshow(folder)
     wallpaper=Wallpaper()
 except Exception as e:
     print("Error:",e)
+    exit()
+
+if not wallpaper.setPosition(position):
+    print("Invalid Position")
     exit()
 
 print("\n---Slideshow started---")
@@ -28,5 +34,6 @@ try:
         if not wallpaper.setWallpaper(image):
             print("Failed to change wallpaper")
         time.sleep(interval)
+        
 except KeyboardInterrupt:
     print("\nslideshow stopped")

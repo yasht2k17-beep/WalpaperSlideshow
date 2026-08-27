@@ -29,6 +29,32 @@ class IDesktopWallpaper(IUnknown):
             (
                 ["out"],ctypes.POINTER(wintypes.UINT),"count"
             )
+        ),
+        COMMETHOD(
+            [],ctypes.HRESULT,
+            "GetMonitorRECT",
+            (["in"],wintypes.LPCWSTR,"monitorID"),
+            (
+                ["out"],
+                ctypes.c_void_p,
+                "displayRect"
+            )
+        ),
+        COMMETHOD(
+            [],
+            ctypes.HRESULT,
+            "SetBackgroundColor",
+            (["in"],wintypes.DWORD,"color")
+        ),
+        COMMETHOD(
+            [],ctypes.HRESULT,
+            "GetBackgroundColor",
+            (["out"],ctypes.POINTER(wintypes.DWORD),"color")
+        ),
+        COMMETHOD(
+            [],ctypes.HRESULT,
+            "SetPosition",
+            (["in"],ctypes.c_int,"position")
         )
     ]
 
@@ -37,7 +63,11 @@ class IDesktopWallpaper(IUnknown):
         clsid=GUID("{C2CF3110-460E-4FC1-B9D0-8A1C0C9CC4BD}")
 
         return comtypes.CoCreateInstance(clsid,interface=cls)
-
+POSITIONS={
+    "center":0, "tile":1,
+    "stretch":2,"fit":3,
+    "fill":4
+}
 class Wallpaper:
     def __init__(self):
         self.desktopWallpaper=(IDesktopWallpaper.CoCreateInstance())
@@ -49,4 +79,16 @@ class Wallpaper:
             return True
         except Exception as e:
             print("Wallpaper error:",e)
+            return False
+
+    def setPosition(self,position):
+        try:
+            if position not in POSITIONS:
+                return False
+            
+            self.desktopWallpaper.SetPosition(POSITIONS[position])
+            return True
+        
+        except Exception as e:
+            print("Position error:",e)
             return False
