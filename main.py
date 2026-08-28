@@ -1,16 +1,19 @@
 from slideshow import Slideshow
 import time
 from wallpaper import Wallpaper
+from config import Config
 
-folder=input ("Enter wallpaper folder: ")
+configManager=Config()
+config=configManager.load()
 
-try:
-    interval=float(input("Enter interval in seconds: "))
-except ValueError:
-    print("Invalid interval")
+folder=config["folder"]
+interval=config["interval"]
+position=config["position"]
+
+if not folder:
+    print("No folder configured")
+    print("Edit config.json and add wallpaper folder")
     exit()
-
-position=input("Enter position (center/tile/stretch/fit/fill): ").lower()
 
 try:
     slideshow=Slideshow(folder)
@@ -24,6 +27,9 @@ if not wallpaper.setPosition(position):
     exit()
 
 print("\n---Slideshow started---")
+print("Folder:",folder)
+print("Interval:",interval,"seconds")
+print("Position:",position)
 print("Press ctrl+c to stop\n")
 
 try:
