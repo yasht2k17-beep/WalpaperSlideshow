@@ -23,14 +23,15 @@ class Slideshow:
 
         if not self.wallpapers:
             raise ValueError("No supprted Wallpapers found")
-        self.startNewCycle()
 
     def startNewCycle(self):
+        self.loadWallpapers()
+
         self.remaining=self.wallpapers.copy()
         random.shuffle(self.remaining)
 
         if(self.lastShown is not None and 
-           len(self.remaining)>1 and self.remaining[0]==self.lastShown):
+        len(self.remaining)>1 and self.remaining[0]==self.lastShown):
             self.remaining[0],self.remaining[1]=(self.remaining[1],self.remaining[0])
 
     def getNext(self):
