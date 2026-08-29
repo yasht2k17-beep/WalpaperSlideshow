@@ -1,0 +1,45 @@
+from slideshow import Slideshow
+import time
+from wallpaper import Wallpaper
+from config import Config
+
+configManager=Config()
+config=configManager.load()
+
+folder=config["folder"]
+interval=config["interval"]
+position=config["position"]
+
+if not folder:
+    print("No folder configured")
+    print("Edit config.json and add wallpaper folder")
+    exit()
+
+try:
+    slideshow=Slideshow(folder)
+    wallpaper=Wallpaper()
+except Exception as e:
+    print("Error:",e)
+    exit()
+
+if not wallpaper.setPosition(position):
+    print("Invalid Position")
+    exit()
+
+print("\n---Slideshow started---")
+print("Folder:",folder)
+print("Interval:",interval,"seconds")
+print("Position:",position)
+print("Press ctrl+c to stop\n")
+
+try:
+    while True:
+        image=slideshow.getNext()
+        print("showing:",image)
+
+        if not wallpaper.setWallpaper(image):
+            print("Failed to change wallpaper")
+        time.sleep(interval)
+        
+except KeyboardInterrupt:
+    print("\nslideshow stopped")
