@@ -13,6 +13,7 @@ A Python-based Windows wallpaper slideshow that randomly displays wallpapers whi
 - Start and stop slideshow from the GUI
 - Saves configuration settings
 - Supports JPG, JPEG, PNG, BMP and WEBP
+- Windows executable support
 
 ## Project Structure
 ```
@@ -22,7 +23,6 @@ A Python-based Windows wallpaper slideshow that randomly displays wallpapers whi
 ├── slideshow.py
 ├── wallpaper.py
 ├── config.py
-├── config.json
 ├── requirements.txt
 ├── README.md
 └── .gitignore
@@ -63,13 +63,27 @@ python gui.py
 ```
 Use the GUI to select the wallpaper folder, set the interval and position, and control the slideshow.
 
+## Executable
+The application can also be packaged as a Windows executable using PyInstaller.
+
+The packaged application consists of:
+
+dist/
+├── gui.exe
+├── config.json
+└── main/
+    ├── main.exe
+    └── _internal/
+
+Run gui.exe to launch the application.
+
 ## Future Improvements
 
 - System tray support
 - Start with Windows
 - Pause/resume controls
 - Multiple wallpaper folders
-- Executable distribution
+- Automatic slideshow recovery
 
 ## Author
 
