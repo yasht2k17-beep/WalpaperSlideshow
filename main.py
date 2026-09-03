@@ -14,18 +14,18 @@ def run():
     if not folder:
         print("No folder configured")
         print("Edit config.json and add wallpaper folder")
-        exit()
+        return
 
     try:
         slideshow=Slideshow(folder)
         wallpaper=Wallpaper()
     except Exception as e:
         print("Error:",e)
-        exit()
+        return
 
     if not wallpaper.setPosition(position):
         print("Invalid Position")
-        exit()
+        return
 
     print("\n---Slideshow started---")
     print("Press ctrl+c to stop\n")

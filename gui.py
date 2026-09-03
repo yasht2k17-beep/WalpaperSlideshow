@@ -8,7 +8,12 @@ from ctypes import wintypes
 
 from config import Config
 
-PID_FILE=Path(".slideshow.pid")
+if getattr(sys,"frozen",False):
+    APP_DIR=Path(sys.executable).parent
+else:
+    APP_DIR=Path(__file__).parent
+PID_FILE=APP_DIR/".slideshow.pid"
+
 MUTEX_NAME="RandomWallpaperSlideshow_GUI"
 PROCESS_QUERY_LIMITED_INFORMATION=0x1000
 PROCESS_TERMINATE=0x0001
@@ -204,10 +209,20 @@ class WallpaperGUI:
                 )
             return
 
-        process=subprocess.Popen(
-            [sys.executable,"main.py"],
-            cwd=Path(__file__).parent
-        )
+        if getattr(sys,"frozen",False):
+            main_path=Path(sys.executable).parent/"main"/"main.exe"
+
+            process=subprocess.Popen(
+                        [str(main_path)],
+                        cwd=APP_DIR
+                    )
+        else:
+            main_path=Path(__file__).parent/"main.py"
+
+            process=subprocess.Popen(
+                [sys.executable,str(main_path)],
+                cwd=main_path.parent
+            )
 
         self.process=process.pid
 
@@ -252,30 +267,75 @@ class WallpaperGUI:
                 "Failed to stop slideshow."
         )
 
-    def isProcessRunning(self, pid):
+    def isProcessRunning(self, pid): 
+ 
+        kernel32 = ctypes.windll.kernel32 
+ 
+        kernel32.OpenProcess.argtypes = [ 
+            wintypes.DWORD, 
+            wintypes.BOOL, 
+            wintypes.DWORD 
+        ] 
+        kernel32.OpenProcess.restype = wintypes.HANDLE 
+ 
+        kernel32.GetExitCodeProcess.argtypes = [ 
+            wintypes.HANDLE, 
+            ctypes.POINTER(wintypes.DWORD) 
+        ] 
+        kernel32.GetExitCodeProcess.restype = wintypes.BOOL 
+ 
+        kernel32.CloseHandle.argtypes = [ 
+            wintypes.HANDLE 
+        ] 
+        kernel32.CloseHandle.restype = wintypes.BOOL 
+ 
+        handle = kernel32.OpenProcess( 
+            PROCESS_QUERY_LIMITED_INFORMATION, 
+            False, 
+            int(pid) 
+        ) 
+ 
+        if not handle: 
+            return False 
+ 
+        exitCode = wintypes.DWORD() 
+ 
+        result = kernel32.GetExitCodeProcess( 
+            handle, 
+            ctypes.byref(exitCode) 
+        ) 
+ 
+        kernel32.CloseHandle(handle) 
+ 
+        if not result: 
+            return False 
+ 
+        return exitCode.value == STILL_ACTIVE
+    
+    def terminateProcess(self,pid):
 
-        kernel32 = ctypes.windll.kernel32
+        kernel32=ctypes.windll.kernel32
 
-        kernel32.OpenProcess.argtypes = [
+        kernel32.OpenProcess.argtypes=[
             wintypes.DWORD,
             wintypes.BOOL,
             wintypes.DWORD
         ]
-        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.OpenProcess.restype=wintypes.HANDLE
 
-        kernel32.GetExitCodeProcess.argtypes = [
+        kernel32.TerminateProcess.argtypes=[
             wintypes.HANDLE,
-            ctypes.POINTER(wintypes.DWORD)
+            wintypes.UINT
         ]
-        kernel32.GetExitCodeProcess.restype = wintypes.BOOL
+        kernel32.TerminateProcess.restype=wintypes.BOOL
 
-        kernel32.CloseHandle.argtypes = [
+        kernel32.CloseHandle.argtypes=[
             wintypes.HANDLE
         ]
-        kernel32.CloseHandle.restype = wintypes.BOOL
+        kernel32.CloseHandle.restype=wintypes.BOOL
 
-        handle = kernel32.OpenProcess(
-            PROCESS_QUERY_LIMITED_INFORMATION,
+        handle=kernel32.OpenProcess(
+            PROCESS_TERMINATE,
             False,
             int(pid)
         )
@@ -283,35 +343,14 @@ class WallpaperGUI:
         if not handle:
             return False
 
-        exitCode = wintypes.DWORD()
-
-        result = kernel32.GetExitCodeProcess(
+        result=kernel32.TerminateProcess(
             handle,
-            ctypes.byref(exitCode)
+            0
         )
 
         kernel32.CloseHandle(handle)
 
-        if not result:
-            return False
-
-        return exitCode.value == STILL_ACTIVE
-
-    def terminateProcess(self,pid):
-        kernel32=ctypes.windll.kernel32
-
-        handle=kernel32.OpenProcess(
-            PROCESS_TERMINATE,False,pid
-        )
-
-        if not handle:
-            return False
-
-        result=kernel32.TerminateProcess(handle,0)
-
-        kernel32.CloseHandle(handle)
-
-        return bool(result)    
+        return bool(result)
     def run(self):
         self.root.mainloop()
 
